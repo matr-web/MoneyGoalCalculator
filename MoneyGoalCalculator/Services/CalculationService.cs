@@ -2,7 +2,9 @@
 using MoneyGoalCalculator.Entities;
 using MoneyGoalCalculator.Interfaces;
 using MoneyGoalCalculator.Models.Dto_s;
+using System.Globalization;
 using System.Linq.Expressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MoneyGoalCalculator.Services;
 
@@ -104,5 +106,29 @@ public class CalculationService : ICalculationService
 
         // Return the Calculation DTO.
         return calculationDto;
+    }
+
+    public IEnumerable<string> GetMonthsInCalculation(int id)
+    {
+        // Get calculation from db by id.
+        var calculation = _context.Calculations.Find(id);
+
+        // Calculate the count of months to raise the money.
+        var monthsLeftCount = ((calculation.DateTo.Year - DateTime.Now.Year) * 12) + calculation.DateTo.Month - DateTime.Now.Month;
+
+        // Create a new DateTime type List.
+        var datesList = new List<string>();
+
+        // Calculate the dates...
+        for (int i = 0; i < monthsLeftCount; i++)
+        {
+            var dateFormatted = new DateTime(calculation.CalculationDate.AddMonths(i).Year, calculation.CalculationDate.AddMonths(i).Month, 1).ToString("MMMM yyyy");
+           
+            //...and add them to list.
+            datesList.Add(dateFormatted);
+        }
+
+        // Return collection of dates in which the user will have to deposit money.
+        return datesList; 
     }
 }

@@ -11,7 +11,6 @@ public class CalculationDto
     /// <summary>
     /// Calculation Primary Key.
     /// </summary>
-    [Key]
     public int? Id { get; set; }
 
     /// <summary>

@@ -22,7 +22,7 @@ public class CalculationController : ControllerBase
     /// Get Collection of Calculations DTO.
     /// </summary>
     /// <returns>Response 200 OK with formatted Calculations.</returns>
-    [HttpGet]
+    [HttpGet("GetCalculations")]
     public async Task<ActionResult<FormattedCalculationDto>> GetCalculations()
     {
         // Get Calculations DTO.
@@ -40,12 +40,34 @@ public class CalculationController : ControllerBase
     }
 
     /// <summary>
+    /// Get formatted dates (month + year) in which the User will have to pay given money installment to achive his goal.
+    /// </summary>
+    /// <param name="id">Calculation Id.</param>
+    /// <returns>200 OK with calculated Dates.</returns>
+    [HttpGet("GetDatesInCalculation")]
+    public ActionResult<DateTime> GetDatesInCalculationCalculation([FromQuery] int id)
+    {
+        // Get the Dates.
+        var datesInCalculation = _calculationService.GetMonthsInCalculation(id);
+
+        // If there are no Dates...
+        if (datesInCalculation == null)
+        {
+            // Return 400 BadRequest.
+            return BadRequest();
+        }
+
+        // Return 200 OK with calculated Dates.
+        return Ok(datesInCalculation); 
+    }
+
+    /// <summary>
     /// Calculates the monthly payment according to the amount and the date by which the sum must be collected.
 	/// Add given Calculation do db.
     /// </summary>
     /// <param name="createCalculationDto">DTO that holds all required data for calculating the monthly payment and saving it to the db.</param>
     /// <returns>Response 200 OK with just created Calculation DTO.</returns>
-    [HttpPost]
+    [HttpPost("CalculateMoneyInstallment")]
 	public async Task<ActionResult<FormattedCalculationDto>> CalculateMoneyInstallment([FromBody] CreateCalculationDto createCalculationDto)
 	{
 		// Calculate monthly payment and get all information into DTO.
@@ -63,7 +85,7 @@ public class CalculationController : ControllerBase
     /// </summary>
     /// <param name="id">Id of Calculation with should be deleted.</param>
     /// <returns>204 NoContent.</returns>
-    [HttpDelete]
+    [HttpDelete("DeleteCalculation")]
     public async Task<ActionResult> DeleteCalculationAsync([FromQuery] int id)
     {
         // Get Calculation with given Id.

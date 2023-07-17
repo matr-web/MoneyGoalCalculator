@@ -41,4 +41,11 @@ public interface ICalculationService
     /// <param name="createCalculationDto">DTO with data for given calculation.</param>
     /// <returns>DTO of Calculation with calculated money installment.</returns>
     CalculationDto CalculateMoneyInstallment(CreateCalculationDto createCalculationDto);
+
+    /// <summary>
+    /// Gets dates (month + year) in which the user will have to deposit money in given Calculation.
+    /// </summary>
+    /// <param name="id">Given Calculation Id.</param>
+    /// <returns>Formatted dates (month + year) in which the user will have to deposit money as collection of strings.</returns>
+    IEnumerable<string> GetMonthsInCalculation(int id);
 }
